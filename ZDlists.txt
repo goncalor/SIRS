@@ -1,0 +1,13 @@
+Lists of zero-day vulnerabilities.
+
+
+active vulnerabilities:
+
+http://blog.beyondtrust.com/zd_threat
+http://1337day.com
+
+--
+
+solved vulnerabilities:
+
+http://www.zerodayinitiative.com/advisories/published/
