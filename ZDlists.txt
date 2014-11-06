@@ -11,3 +11,14 @@ http://1337day.com
 solved vulnerabilities:
 
 http://www.zerodayinitiative.com/advisories/published/
+
+
+---
+
+Bug Trackers:
+
+https://code.google.com/p/chromium/issues/list
+
+https://bugzilla.mozilla.org/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=Firefox&content=vulnerability&comments=0
+
+
