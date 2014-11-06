@@ -1,0 +1,18 @@
+PROJECT
+
+Soft Deadlines = Milestones: Nov, 7th; Nov, 14th; Nov, 21st; Nov, 28th [20h00]
+
+HARD Deadline = Dec, 5th [20h00]
+
+The report should reflect the work-in-progress
+
+REPORT STRUCTURE:
+
+-Motivation
+-Goals - basic, intermediate, advanced
+-Work Plan:
+	-For each week (sprint):
+		team availability
+		tasks
+-Results (expected vs actual)
+-References (as we consult references, we add them to the report)
