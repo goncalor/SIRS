@@ -8,6 +8,7 @@ The report should reflect the work-in-progress
 
 REPORT STRUCTURE:
 
+-(Overview)
 -Motivation
 -Goals - basic, intermediate, advanced
 -Work Plan:
@@ -15,4 +16,5 @@ REPORT STRUCTURE:
 		team availability
 		tasks
 -Results (expected vs actual)
+-(conclusion)
 -References (as we consult references, we add them to the report)
