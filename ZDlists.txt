@@ -5,6 +5,7 @@ active vulnerabilities:
 
 http://blog.beyondtrust.com/zd_threat
 http://1337day.com
+http://www.exploit-db.com/
 
 --
 
