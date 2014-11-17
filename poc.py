@@ -50,7 +50,7 @@ for e in ['m3u', 'pls', 'asx']:
   try:
     print("[*] Creating poc.%s file..." % e)
     f = open('poc.%s' % e, 'wb')
-    f.write(poc.encode('utf-8'))
+    f.write(bytearray(poc))
     f.close()
     print("[*] %s file successfully created!" % f.name)
   except:
