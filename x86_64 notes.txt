@@ -1,0 +1,41 @@
+
+
+ESP - points to top of stack
+EIO - points to the next instruction being executed
+EBP - points to the base of the current function
+
+
+When a function is called (CALL ptr):
+ - a new stack frame is created and ESP points to the top of it
+ - EIP is pushed onto the stack (ESP is changed accordingly)
+ - EBP is pushed onto the stack (ESP is changed accordingly)
+ - ESP is loaded into EBP
+
+
+EAX : accumulator : used for performing calculations, and used to store return values from function calls. Basic operations such as add, subtract, compare use this general-purpose register
+EBX : base (does not have anything to do with base pointer). It has no general purpose and can be used to store data.
+ECX : counter : used for iterations. ECX counts downward.
+EDX : data : this is an extension of the EAX register. It allows for more complex calculations (multiply, divide) by allowing extra data to be stored to facilitate those calculations.
+ESP : stack pointer
+EBP : base pointer
+ESI : source index : holds location of input data
+EDI : destination index  : points to location of where result of data operation is stored
+EIP : instruction pointer
+
+
+Every Windows application uses parts of memory, 3 major components: code segment (instructions that the processor executes), data segment (variables, dynamic buffers), stack segment (used to pass data/arguments to functions, and is used as space for variables.
+
+Every time a function is called, the function parameters are pushed onto the stack, as well  as the saved values of registers (EBP, EIP).  When a function returns, the saved value of EIP is retrieved from the stack and placed back in EIP, so the normal application flow can be resumed.
+
+We cannot just overwrite EIP with a direct memory address. It’s not a good idea because it would not be reliable. We have to use another technique to achieve the same goal.
+
+
+SEH (Structured Exception Handler)
+
+If an exception handler is implement in this function/procedure, the exception handler gets its own stack frame.Information about the frame-based exception handler is stored in an exception_registration structure on the stack.
+
+The SEH record has 2 fields:
+ - a pointer to the nextSEH record, in case the current handler is unable the handle the exception
+ - a pointer to the actual code of the exception handler. (SE Handler)
+
+SEH chain is often called the FS:[0] chain as well.  (TEB thread environment block)
