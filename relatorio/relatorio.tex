@@ -82,16 +82,17 @@ Por fim testámos a POC encontrada na Exploit Database\footnote{http://www.explo
 \subsection{Semana 3}
 Prazo: 21/11/14
 \subsubsection{Disponibilidade}
-Reduzida devido ao teste de SIRS.
+Muito reduzida devido ao teste de SIRS.
 
 \subsubsection{Tarefas}
 \begin{itemize}
 	\item Identificar o objectivo do código Assembly injectado através de buffer overflow
-	\item Iniciar uma análise STRIDE do programa Haihaisoft UMP
 \end{itemize}
 
 \subsubsection{Trabalho Realizado}
 %Examinámos o código fonte de maneira a descobrir o endereço de retorno, de maneira a alterarmos o código de exploit para conseguirmos correr código nosso
+
+Nesta semana analisámos a POC. São escritos bytes com 4 valores diferentes para o ficheiro de \textit{exploit}. Chegámos à conclusão de que os valores dos bytes se referem aos caracteres ASCII A, B e C e que o outro valor é usado como \textit{padding}.
 
 \subsection{Semana 4}
 Prazo: 28/11/14
@@ -99,14 +100,43 @@ Prazo: 28/11/14
 Maior disponibilidade.
 \subsubsection{Tarefas}
 \begin{itemize}
-	\item Conclusão da análise STRIDE ao software alvo
-	\item Desenvolvimento do código que se serve da vulnerabilidade encontrada para conseguir acesso com privilégios elevados
+	\item Desenvolvimento do código que se serve da vulnerabilidade encontrada para conseguir acesso com privilégios elevados.
 \end{itemize}
+
+\subsubsection{Trabalho Realizado}
+A primeira conclusão a que chegámos foi que não é possível fazer um stack based overflow. O Windows usa SEH (structured exception handlers) o que faz com que stack based overflows não sejam possíveis, ou seja, fazer um overwrite directo do EIP (instruction pointer) e fazer um RET.
+
+Outra conclusão foi que o buffer cuja capacidade é excedida não é directamente o buffer que recebe a URL mas sim um buffer que contém a URL transformada, após transformação/eliminação de caracteres que não são permitidos em URLs. Isto significa que os valores de bytes que nos é possível escrever ficam muito mais limitados. Mais concretamente de 256 valores de bytes passamos a poder usar apenas cerca de 90 valores. Por outro lado não nos é possível usar o valor \texttt{0x00} porque é o terminador de strings e portanto se o usarmos paramos o programa para de copiar bytes assim que encontra um byte com esse valor (parando o nosso overflow antes do que queremos).
+
+O Haihaisoft UMP não foi compilado com protecção da SEH. Ou seja em teoria é possível fazermos overflow das estruturas SEH e enganar o programa de forma a que escreva um novo valor no EIP, valor esse escolhido por nós. Para fazermos isto temos que conseguir que o programa execute uma sequência de instruções POP POP RET que tem que estar em código não compilado com protecção de SEH. Neste caso o próprio executável não tem esta protecção pelo que esta sequência de instruções podia ser uma do próprio programa.
+
+Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, a componente de código é aquela que tem as instruções do programa. Ou seja, é lá que temos que encontrar uma sequência POP POP RET. No entanto, verificámos que os endereços de memória do segmento de código começam todos pelo byte \texttt{0x00}. Isto significa que para enganar o programa a saltar para a dita sequência de código, teríamos que fazer um overwrite da SEH handler para um endereço cujo primeiro byte é \texttt{0x00}. Ora isso não é possível porque não conseguimos escrever esse valor de byte. Portanto não conseguimos que seja executada a sequência de instruções necessária para que conseguíssemos alterar o EIP para uma zona de memória controlada por nós de forma a executar uma exploit.
+
+Decidimos então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro zero-day.
+
+
+\subsubsection{Novo Paradigma -- i.FTP}
+Consultámos o endereço exploit-db.com de forma a encontramos um zero-day novo. O candidato que escolhemos foi o i.FTP. Trata-se de um cliente de FTP que apresenta vulnerabilidades de buffer overflow (decidimos manter o tipo de vulnerabilidades a serem exploradas).
+
+O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC concluímos que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml. Existe um campo nesse ficheiro que se refere ao tempo para o qual queremos agendar uma transferência. Esse campo é susceptível a overflows.
+
+Fizemos uma análise da vulnerabilidade e conseguimos executar uma exploit (abrir a calculadora do Windows). Esta exploit não é muito interessante e portanto vamos tentar elaborar outra que o seja.
+
+Quando corremos o programa a calculadora é imediatamente aberta e o programa termina com a janela do Windows que diz que o programa não responde. Gostávamos de evitar 	que o programa terminasse de forma a que não seja perceptivel que algo de errado se passou.
+
 
 \subsection{Semana 5}
 Prazo: 05/12/14
 \subsubsection{Disponibilidade}
+Média.
 \subsubsection{Tarefas}
+\begin{itemize}
+	\item Elaborar uma exploit mais interessante;
+	\item Evitar que o programa deixe de responder;
+	\item Tentar eliminar a vulnerabilidade;
+	\item Conclusão do presente documento.
+\end{itemize}
+
 
 \pagebreak
 
