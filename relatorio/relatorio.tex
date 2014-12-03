@@ -20,6 +20,7 @@
 
 \pagenumbering{arabic}
 \section{Motivação}
+Este trabalho tem como motivação fazer um estudo aprofundado de uma zero-day vulnerability, e, desta forma, perceber como funcionam este tipo de ataques e como são tratadas as vulnerabilidades a eles associadas. Para além disso, como motivação também surge o facto de esta ser uma oportunidade para aplicar os conhecimentos adquiridos este semestre na disciplina de Segurança Informática em Redes e Sistemas.
 
 \pagebreak
 \section{Objectivos}
@@ -28,14 +29,14 @@
 \subsection{Antes de 25 de Novembro}
 
 \subsection*{Básico}
-Especificar uma vulnerabilidade no Haihaisoft Universal Player.
+Especificar uma vulnerabilidade no Haihaisoft Universal Media Player.
 \subsection*{Intermédio}
 Realização de um ataque ao software por intermédio da vulnerabilidade especificada.
 \subsection*{Avançado}
-Investigação e aplicação de métodos que permitam resolver total ou parcialmente a vulnerabilidade do Haihaisoft UP.
+Investigação e aplicação de métodos que permitam resolver total ou parcialmente a vulnerabilidade do Haihaisoft UMP.
 
 \subsection{Após 25 de Novembro}
-Após uma análise cuidade e tentativas de ataque ao Haihaisoft UP chegámos à conclusão de que era inviável fazer uma \textit{exploit} que fosse consistente entre versões do Windows. Vimo-nos portanto obrigados a escolher outro software com uma vulnerabilidade \textit{zero-day}. De forma a aproveitar o conhecimento adquirido escolhemos um software também vulnerável a \textit{buffer overflows}: o i.FTP. Sequem-se os novos objectivos.
+Após uma análise cuidada e tentativas de ataque ao Haihaisoft UMP chegámos à conclusão de que era inviável fazer uma \textit{exploit} que fosse consistente entre versões do Windows. Vimo-nos portanto obrigados a escolher outro software com uma vulnerabilidade \textit{zero-day}. De forma a aproveitar o conhecimento adquirido escolhemos um software também vulnerável a \textit{buffer overflows}: o i.FTP. Seguem-se os novos objectivos.
 
 \subsection*{Básico}
 Especificar uma vulnerabilidade no software i.FTP.
@@ -60,7 +61,7 @@ Reduzida devido a avaliações e entregas de projectos de outras UCs.
 \end{itemize}
 
 \subsubsection{Trabalho Realizado}
-Nesta semana procurámos listas de software/websites com vulnerabilidades activas e escolhemos o Haihaisoft Universal Player\footnote{\url{http://www.haihaisoft.com/hup.aspx}} como objecto de estudo deste projecto. Este software é desenvolvido para Windows e é software aberto.
+Nesta semana procurámos listas de software/websites com vulnerabilidades activas e escolhemos o Haihaisoft Universal Media Player\footnote{\url{http://www.haihaisoft.com/hup.aspx}}, um leitor universal de ficheiros multimédia, como objecto de estudo deste projecto. Este software é desenvolvido para Windows e é software aberto.
 
 Foram também delineados os objectivos deste projecto (Secção~\ref{sec:objectivos}).
 
@@ -76,11 +77,11 @@ Reduzida devido a avaliações e entregas de projectos de outras UCs.
 \end{itemize}
 
 \subsubsection{Trabalho Realizado}
-Tendo-se verificado que o Haihaisoft Universal Player funciona exclusivamente em Windows foi esse o sistema operativo escolhido para instalar na máquina virtual. Como o Windows é software pago teve-se em conta esse factor de forma a fazer uma instalação que não tivesse problemas com licenças. Neste sentido e visto que o Windows 10 Technical Preview foi lançado recentemente foi esta a versão do Windows que se escolheu instalar na máquina virtual. De seguida instalou-se o Haihaisoft UP e verificou-se o seu correcto funcionamento.
+Tendo-se verificado que o Haihaisoft Universal Player funciona exclusivamente em Windows foi esse o sistema operativo escolhido para instalar na máquina virtual. Como o Windows é software pago teve-se em conta esse factor de forma a fazer uma instalação que não tivesse problemas com licenças. Neste sentido, e visto que o Windows 10 Technical Preview foi lançado recentemente, foi esta a versão do Windows que se escolheu instalar na máquina virtual. De seguida instalou-se o Haihaisoft UMP e verificou-se o seu correcto funcionamento.
 
-Uma das coisas que nos impressionou foi o facto de que o Haihaisoft UP precisa de privilégios de administrador para ser executado. Como tal, e visto que este software é vulnerável a buffer overflows, o código que conseguirmos injectar vai correr com privilégios de administrador deixando a máquina largamente à nossa mercê.
+Uma das coisas que nos impressionou foi o facto de que o Haihaisoft UMP precisa de privilégios de administrador para ser executado. Como tal, e visto que este software é vulnerável a buffer overflows, o código que conseguirmos injectar vai correr com privilégios de administrador deixando a máquina largamente à nossa mercê.
 
-Por fim testámos a POC encontrada na Exploit Database\footnote{\url{http://www.exploit-db.com/exploits/32514/}}. Esta POC consiste num pequeno script escrito em Python. Como tal instalámos Python na máquina virtual. Tentámos correr o script mas o Python revelava alguns erros. Após correcção desses erros conseguimos gerar 3 ficheiros de exploit. Experimentámos então abrir esses ficheiros no Haihaisoft. Os resultados dos 3 ficheiros foram semelhantes. Com um deles o programa fechou-se mal era aberto. Com os outros dois ficheiros o programa deixava de responder (aparecia o menu do Windows a dar essa informação) e passado algum tempo o programa era fechado. O shellcode introduzido é um conjunto de instruções que ainda não tivemos oportunidade de verificar o que faz. No entanto verificámos que claramente algo de errado acontece com o programa ao abrir os ficheiros de exploit.
+Por fim testámos a POC encontrada na Exploit Database\footnote{\url{http://www.exploit-db.com/exploits/32514/}}. Esta POC consiste num pequeno script escrito em Python. Como tal, instalámos Python na máquina virtual. Tentámos correr o script mas o Python revelava alguns erros. Após correcção desses erros conseguimos gerar 3 ficheiros de exploit. Experimentámos então abrir esses ficheiros no Haihaisoft. Os resultados dos 3 ficheiros foram semelhantes. Com um deles o programa fechou-se mal era aberto. Com os outros dois ficheiros o programa deixava de responder (aparecia o menu do Windows a dar essa informação), e passado algum tempo o programa era fechado. O shellcode introduzido é um conjunto de instruções que ainda não tivemos oportunidade de verificar o que faz. No entanto verificámos que claramente algo de errado acontece com o programa ao abrir os ficheiros de exploit.
 
 \subsection{Semana 3}
 Prazo: 21/11/14
@@ -109,23 +110,23 @@ Maior disponibilidade.
 \subsubsection{Trabalho Realizado}
 A primeira conclusão a que chegámos foi que não é possível fazer um stack based overflow. O Windows usa SEH (structured exception handlers) o que faz com que stack based overflows não sejam possíveis, ou seja, fazer um overwrite directo do EIP (instruction pointer) e fazer um RET.
 
-Outra conclusão foi que o buffer cuja capacidade é excedida não é directamente o buffer que recebe a URL mas sim um buffer que contém a URL transformada, após transformação/eliminação de caracteres que não são permitidos em URLs. Isto significa que os valores de bytes que nos é possível escrever ficam muito mais limitados. Mais concretamente de 256 valores de bytes passamos a poder usar apenas cerca de 90 valores. Por outro lado não nos é possível usar o valor \texttt{0x00} porque é o terminador de strings e portanto se o usarmos paramos o programa para de copiar bytes assim que encontra um byte com esse valor (parando o nosso overflow antes do que queremos).
+Outra conclusão foi que o buffer cuja capacidade é excedida não é directamente o buffer que recebe a URL mas sim um buffer que contém a URL transformada, após transformação/eliminação de caracteres que não são permitidos em URLs. Isto significa que os valores de bytes que nos é possível escrever ficam muito mais limitados. Mais concretamente de 256 valores de bytes passamos a poder usar apenas cerca de 90 valores. Por outro lado não nos é possível usar o valor \texttt{0x00} porque é o terminador de strings, e portanto se o usarmos o programa para de copiar bytes assim que encontra um byte com esse valor (parando o nosso overflow antes do que queremos).
 
-O Haihaisoft UP não foi compilado com protecção da SEH. Ou seja em teoria é possível fazermos overflow das estruturas SEH e enganar o programa de forma a que escreva um novo valor no EIP, valor esse escolhido por nós. Para fazermos isto temos que conseguir que o programa execute uma sequência de instruções POP POP RET que tem que estar em código não compilado com protecção de SEH. Neste caso o próprio executável não tem esta protecção pelo que esta sequência de instruções podia ser uma do próprio programa.
+O Haihaisoft UMP não foi compilado com protecção da SEH. Ou seja em teoria é possível fazermos overflow das estruturas SEH e enganar o programa de forma a que escreva um novo valor no EIP, valor esse escolhido por nós. Para fazermos isto temos que conseguir que o programa execute uma sequência de instruções POP POP RET que tem que estar em código não compilado com protecção de SEH. Neste caso o próprio executável não tem esta protecção pelo que esta sequência de instruções podia ser uma do próprio programa.
 
-Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, a componente de código é aquela que tem as instruções do programa. Ou seja, é lá que temos que encontrar uma sequência POP POP RET. No entanto, verificámos que os endereços de memória do segmento de código começam todos pelo byte \texttt{0x00}. Isto significa que para enganar o programa a saltar para a dita sequência de código, teríamos que fazer um overwrite da SEH handler para um endereço cujo primeiro byte é \texttt{0x00}. Ora isso não é possível porque não conseguimos escrever esse valor de byte. Portanto não conseguimos que seja executada a sequência de instruções necessária para que conseguíssemos alterar o EIP para uma zona de memória controlada por nós de forma a executar uma exploit.
+Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, a componente de código é aquela que tem as instruções do programa. Ou seja, é lá que temos que encontrar uma sequência POP POP RET. No entanto, verificámos que os endereços de memória do segmento de código começam todos pelo byte \texttt{0x00}. Isto significa que para enganar o programa de forma a que este salte para a dita sequência de código, teríamos que fazer um overwrite da SEH handler para um endereço cujo primeiro byte é \texttt{0x00}. Ora isso não é possível porque não conseguimos escrever esse valor de byte. Portanto, não conseguimos que seja executada a sequência de instruções necessária para que conseguíssemos alterar o EIP para uma zona de memória controlada por nós de forma a executar uma \textit{exploit}.
 
-Decidimos então alterar o alvo de estudo do nosso projecto do Haihaisoft UP para outro zero-day.
+Decidimos então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro zero-day.
 
 
 \subsubsection{Novo Paradigma -- i.FTP}
-Consultámos a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontramos um \textit{zero-day} novo. O candidato que escolhemos foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de buffer overflow (decidimos manter o tipo de vulnerabilidade a ser explorada).
+Consultámos a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontramos um \textit{zero-day} novo. O candidato que escolhemos foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de \textit{buffer overflow} (decidimos manter o tipo de vulnerabilidade a ser explorada).
 
-O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC concluímos que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml. Existe um campo nesse ficheiro que se refere ao tempo para o qual queremos agendar uma transferência. Esse campo é susceptível a overflows.
+O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC concluímos que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml. Existe um campo nesse ficheiro que se refere ao tempo para o qual queremos agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
 
-Fizemos uma análise da vulnerabilidade e conseguimos executar uma exploit (abrir a calculadora do Windows). Esta exploit não é muito interessante e portanto vamos tentar elaborar outra que o seja.
+Fizemos uma análise da vulnerabilidade e conseguimos executar uma \textit{exploit} (abrir a calculadora do Windows). Esta \textit{exploit} não é muito interessante e portanto vamos tentar elaborar outra que o seja.
 
-Quando corremos o programa a calculadora é imediatamente aberta e o programa termina com a janela do Windows que diz que o programa não responde. Gostávamos de evitar que o programa terminasse de forma a que não seja perceptível que algo de errado se passou. A calculadora não é afectacada pela terminação do i.FTP, ou seja a \textit{exploit} continua a correr mesmo com o fecho do i.FTP.
+Quando corremos o programa a calculadora é imediatamente aberta e o programa termina com a janela do Windows que diz que o programa não responde. Gostávamos de evitar que o programa terminasse de forma a que não seja perceptível que algo de errado se passou. A calculadora não é afectada pela terminação do i.FTP, ou seja a \textit{exploit} continua a correr mesmo com o fecho do i.FTP.
 
 
 \subsection{Semana 5}
