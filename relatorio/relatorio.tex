@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 \usepackage[portuguese]{babel}
 \usepackage[T1]{fontenc}
@@ -121,10 +121,10 @@ Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, 
 Decidiu-se então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro zero-day.
 
 
-\subsubsection{Novo Paradigma do Projecto-- i.FTP}
+\subsubsection{Novo Paradigma do Projecto-- i.FTP 2.20}
 Consultou-se uma vez mais a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontrar um novo \textit{zero-day}. O candidato escolhido foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de \textit{buffer overflow} (foi decidido manter o tipo de vulnerabilidade a ser explorada, de maneira a não desperdiçar o conhecimento adquirido).
 
-O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC\footnote{\url{http://www.exploit-db.com/exploits/35177/}} conclui-se que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml\footnote{localizado em C:\textbackslash Users\textbackslash someuser\textbackslash AppData\textbackslash Local\textbackslash VirtualStore\textbackslash Program Files (x86)\\ \textbackslash Memecode\textbackslash i.Ftp}. Existe um campo nesse ficheiro que se refere ao tempo para o qual se quer agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
+O referido site oferece uma POC\footnote{\url{http://www.exploit-db.com/exploits/35177/}} para esta vulnerabilidade. Após análise dessa POC conclui-se que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml\footnote{localizado em C:\textbackslash Users\textbackslash someuser\textbackslash AppData\textbackslash Local\textbackslash VirtualStore\textbackslash Program Files (x86)\\ \textbackslash Memecode\textbackslash i.Ftp}. Existe um campo nesse ficheiro que se refere ao tempo para o qual se quer agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
 
 Foi feita uma análise da vulnerabilidade e conseguimos executar uma \textit{exploit} (abrir a calculadora do Windows). Esta \textit{exploit} não é muito interessante, pelo que começou também o desenvolvimento de uma \textit{exploit} que o fosse.
 
@@ -180,6 +180,8 @@ De maneira a melhor explorar as vulnerabilidades presentes, verifica-se que as a
 \end{itemize}
 
 \section{SEH Based Overflow -- Passo a Passo}
+
+\label{sec:seh}
 
 Nem sempre é possível fazer uma \textit{stack based exploit}. No entanto, em Windows é possível fazer um ataque com base na SEH (\textit{structured exception handling}). A SEH trata-se de uma lista ligada de registos relativos às excepções de um programa. Mesmo que um programa não tenha \textit{exception handling}, existe um \textit{handler} inerente ao Sistema Operativo Windows que, no caso de não haver outros \textit{handlers}, é actuado.
 
@@ -288,6 +290,34 @@ Finalmente, através de um varrimento do código-fonte da aplicação, seria apl
 
 \subsection{Obtidos}
 
+\subsubsection{HaiHaisoft UP}
+
+Uma vez analisada a POC disponível, foi determinado que era possível terminar o programa fora dos seus parâmetros de execução normais, fazendo \textit{overflow} de um \textit{buffer}. O \textit{buffer} em questão corresponde ao URL de um elemento de uma \textit{playlist}.
+
+Rapidamente se concluiu que o texto era extraído com sucesso do ficheiro, e que só após uma transformação é que se dava o \textit{overflow}. Esta transformação corresponde à restrição dos caracteres aos que fazem parte do conjunto permitido em URL.
+
+Esta restrição dos caracteres impossibilita uma escolha directa dos endereços para efectuar o salto.
+
+Adicionalmente, não foi possível fazer um \textit{overwrite} directo do EIP (\textit{Extended Instruction Pointer}), sendo necessária a substituição de um elemento da lista de processamento de excepções, e consecutivo accionamento, de forma a modificar indirectamente o EIP.
+
+A impossibilidade de inserir um endereço definido acabou por levar ao abandono deste software em específico, tendo sido seleccionada uma alternativa.
+
+\subsubsection{i.FTP}
+
+Ao analisar a POC, a determinação de endereços de salto e outros valores significativos mostrou-se impossível, pelo que se recorreu a ferramentas como o Immunity Debugger e o Metasploit. A determinação de endereços sem recurso a ferramentas auxiliares é uma técnica morosa e deprecada.
+
+Uma vez feita esta análise (ver Secção~\ref{sec:seh}), viu-se uma vez mais que a modificação directa do EIP é impossível, e é necessário a alteração das rotinas de processamento de excepções.
+
+Acedendo à base de dados do Metasploit, construímos uma série de \textit{exploits} para o i.FTP com variadas funções:
+\begin{itemize}
+        \item Abertura da calculadora do Windows (\texttt{calc.exe});
+        \item Exposição do computador a ligações remotas sem autenticação;
+        \item Execução de binários após a sua transferência via HTTP (sem sucesso).
+\end{itemize}
+
+Assim, procedeu-se à examinação do código-fonte, utilizando ferramentas como o \texttt{grep} para procura de expressões regulares no conteúdo, e da secção do programa relativa ao tratamento de agendamentos e datas (onde se dá o \textit{overflow}) -- Schedule.cpp.
+
+Uma vez feita esta busca, os resultados foram inconclusivos uma vez que a localização exacta da porção de código vulnerável foi impossível de determinar.
 
 \pagebreak
 \bibliographystyle{plain}
