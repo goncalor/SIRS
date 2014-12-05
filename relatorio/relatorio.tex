@@ -123,7 +123,7 @@ Decidiu-se então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP p
 \subsubsection{Novo Paradigma -- i.FTP}
 Consultou-se a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontramos um \textit{zero-day} novo. O candidato escolhido foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de \textit{buffer overflow} (foi decidido manter o tipo de vulnerabilidade a ser explorada).
 
-O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC conclui-se que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml. Existe um campo nesse ficheiro que se refere ao tempo para o qual se quer agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
+O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC conclui-se que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml \footnote{localizado em C:\textbackslash Users\textbackslash someuser\textbackslash AppData\textbackslash Local\textbackslash VirtualStore\textbackslash Program Files (x86)\\ \textbackslash Memecode\textbackslash i.Ftp}. Existe um campo nesse ficheiro que se refere ao tempo para o qual se quer agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
 
 Foi feita uma análise da vulnerabilidade e conseguimos executar uma \textit{exploit} (abrir a calculadora do Windows). Esta \textit{exploit} não é muito interessante e portanto vai-se tentar elaborar outra que o seja.
 
