@@ -151,19 +151,25 @@ Cada registo da SEH tem dois ponteiros: um deles aponta para o código a correr 
 
 A função que é chamada no caso de ocorrer uma excepção tem a particularidade de receber quatro argumentos, sendo que um desses argumentos é a ``\textit{establisher frame}'' cujo valor é o endereço em que se encontra o endereço para a próxima estrutura da SEH. Este endereço é o terceiro elemento no topo da pilha quando a função é chamada. Isto significa que se após a chamada da função for executada uma sequência de instruções POP POP RET, o registo EIP passa a apontar para o endereço imediatamente antes da SE handler. Há portanto a possibilidade de se conseguir executar código visto que com o \textit{overflow} é possível controlar tanto o valor da SE handler como o valor do ponteiro para a próxima estrutura da SEH.
 
-Os passos necessários para fazer uma SEH \textit{based exploit} são:
+Os passos necessários para fazer uma SEH based exploit estão especificados na Figura~\ref{fig:flowchart1}.
 
-\begin{enumerate}
-	\item descobrir aproximadamente a partir de que tamanho de input o programa termina inesperadamente -- exemplo: o programa não apresenta problemas com um input de 1000 caracteres mas sim com um de 2000;
-	\item verificar se o programa é vulnerável a ataques via SEH -- se não for não vale a pena continuar;
-	\item determinar o textit{offset} da SEH;
-	\item encontrar um endereço com uma sequência de instruções POP POP RET;
-	\item verificar qual a melhor localização da stack para escrever o \textit{shellcode};
-	\item escrever as instruções necessária para fazer um ou vários saltos até à localização do \textit{shellcode};
-	\item escrever o \textit{shellcode}, sem caracteres terminadores e outros que não seja possível usar;
-	\item testar a \textit{exploit}.
-\end{enumerate}
+%\begin{enumerate}
+%	\item descobrir aproximadamente a partir de que tamanho de input o programa crasha -- exemplo: o programa não apresenta problemas com um input de 1000 caracteres mas sim com um de 2000 
+%	\item verificar se o programa é vulnerável a ataques via SEH -- se não for não vale a pena continuar
+%	\item determinar o offset da SEH
+%	\item encontrar um endereço com uma sequência de instruções POP POP RET
+%	\item verificar qual a melhor localização da stack para escrever o shellcode
+%	\item escrever as instruções necessária para fazer um ou vários saltos até à localização do shellcode
+%	\item escrever o shellcode, sem caracteres terminadores e outros que não seja possível usar
+%	\item testar a exploit
+%\end{enumerate}
 
+\begin{figure}[h]
+        \centering
+        \includegraphics[width=\linewidth]{fc1}
+        \caption{Fluxograma de uma SEH exploit}
+        \label{fig:flowchart1}
+\end{figure}
 De seguida descreve-se brevemente como se pode executar cada passo. O debugger usado é o Immunity Debugger. Outro programa auxiliar é o Metasploit.
 
 \paragraph*{Programa vulnerável a SEH?} Usando o plugin \texttt{mona} é possível determinar facilmente quais os módulos não compilados com SafeSEH. Para tal, após instalação do \texttt{mona} basta executar o seguinte comando:
