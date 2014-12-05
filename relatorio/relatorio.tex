@@ -142,6 +142,16 @@ Média.
 	\item Conclusão do presente documento.
 \end{itemize}
 
+\section{Análise STRIDE}
+
+Tendo em conta este ataque, fazendo um análise STRIDE ao sistema verifica-se que as ameaças mais preponderantes são:
+
+- Spoofing, pois dá para implantar ficheiros em computadores de outros utilizadores/pessoas;
+- Information Disclosure, dada a possibilidade de nos ser concedido acesso a dados aos quais não temos direito;
+- Tampering with Data, pois a integridade do programa pde ser comprometida;
+- DoS, pois há situações em que ocorre o crash do programa;
+- Elevation of Privilege, dado que o utilizador que corre o programa não é o nosso, havendo sempre a possibilidade de correr o programa como administrador.
+
 
 \section{SEH Based Overflow -- Passo a Passo}
 
@@ -166,8 +176,8 @@ Os passos necessários para fazer uma SEH based exploit estão especificados na 
 
 \begin{figure}[h]
         \centering
-        \includegraphics[width=\linewidth]{fc1}
-        \caption{Fluxograma de uma SEH exploit}
+        \includegraphics[width=0.7\linewidth]{fc1}
+        \caption{Fluxograma de uma SEH \textit{exploit}}
         \label{fig:flowchart1}
 \end{figure}
 De seguida descreve-se brevemente como se pode executar cada passo. O debugger usado é o Immunity Debugger. Outro programa auxiliar é o Metasploit.
@@ -195,7 +205,7 @@ em que Au0A é o valor escrito no sítio do ponteiro anteriormente referido para
 \begin{figure}
 	\centering
 	\includegraphics[scale=1]{find_POPPOPRET}
-	\caption{procurar uma sequência POP POP RET}
+	\caption{Procurar uma sequência POP POP RET}
 	\label{find_POPPOPRET}
 \end{figure}
 
