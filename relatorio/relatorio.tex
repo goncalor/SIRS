@@ -48,99 +48,99 @@ Tentar eliminar a vulnerabilidade estudada.
 
 
 \pagebreak
-\section{Plano de Trabalho}
-
+%\section{Plano de Trabalho}
+\section{Trabalho Realizado}
 \subsection{Semana 1}
-Prazo: 07/11/14
-\subsubsection{Disponibilidade}
-Reduzida devido a avaliações e entregas de projectos de outras UCs.
+%Prazo: 07/11/14
+%\subsubsection{Disponibilidade}
+%Reduzida devido a avaliações e entregas de projectos de outras UCs.
 
-\subsubsection{Tarefas}
-\begin{itemize}
-\item escolher um software/website com uma vulnerabilidade activa
-\item definir os parâmetros iniciais do projecto
-\end{itemize}
+%\subsubsection{Tarefas}
+%\begin{itemize}
+%\item escolher um software/website com uma vulnerabilidade activa
+%\item definir os parâmetros iniciais do projecto
+%\end{itemize}
 
-\subsubsection{Trabalho Realizado}
-Nesta semana procuram-se listas de software/websites com vulnerabilidades activas e foi escolhido o Haihaisoft Universal Player\footnote{\url{http://www.haihaisoft.com/hup.aspx}}, um leitor universal de ficheiros multimédia, como objecto de estudo deste projecto. Este software é desenvolvido para Windows e é software aberto.
+%\subsubsection{Trabalho Realizado}
+Nesta semana procuraram-se listas de software/websites com vulnerabilidades activas e foi escolhido o Haihaisoft Universal Player\footnote{\url{http://www.haihaisoft.com/hup.aspx}}, um leitor universal de ficheiros multimédia, como objecto de estudo deste projecto. Este software é desenvolvido para Windows e é software aberto.
 
 Foram também delineados os objectivos deste projecto (Secção~\ref{sec:objectivos}).
 
 \subsection{Semana 2}
-Prazo: 14/11/14
-\subsubsection{Disponibilidade}
-Reduzida devido a avaliações e entregas de projectos de outras UCs.
+%Prazo: 14/11/14
+%\subsubsection{Disponibilidade}
+%Reduzida devido a avaliações e entregas de projectos de outras UCs.
 
-\subsubsection{Tarefas}
-\begin{itemize}
-\item preparar uma máquina virtual que possa ser usada ao longo do projecto;
-\item testar a \textit{proof of concept} (POC) da vulnerabilidade \textit{zero-day}.
-\end{itemize}
+%\subsubsection{Tarefas}
+%\begin{itemize}
+%\item preparar uma máquina virtual que possa ser usada ao longo do projecto;
+%\item testar a \textit{proof of concept} (POC) da vulnerabilidade \textit{zero-day}.
+%\end{itemize}
 
-\subsubsection{Trabalho Realizado}
+%\subsubsection{Trabalho Realizado}
 Tendo-se verificado que o Haihaisoft Universal Player funciona exclusivamente em Windows, foi esse o sistema operativo escolhido para instalar na máquina virtual. Como o Windows é software pago teve-se em conta esse factor de forma a fazer uma instalação que não tivesse problemas com licenças. Neste sentido, e visto que o Windows 10 Technical Preview foi lançado recentemente, foi esta a versão do Windows que se escolheu instalar na máquina virtual. De seguida instalou-se o Haihaisoft UMP e verificou-se o seu correcto funcionamento.
 
-Uma das coisas que impressionou foi o facto de o Haihaisoft UP precisar de privilégios de administrador para ser executado. Como tal, e visto que este software é vulnerável a buffer overflows, o código que se conseguiu injectar vai correr com privilégios de administrador deixando a máquina largamente à mercê de potenciais atacantes.
+Uma das coisas impressionantes foi o facto de o Haihaisoft UP precisar de privilégios de administrador para ser executado. Como tal, e visto que este software é vulnerável a buffer overflows, o código que se conseguir injectar vai correr com privilégios de administrador deixando a máquina largamente à mercê de potenciais atacantes.
 
-Por fim testou-se a POC encontrada na Exploit Database\footnote{\url{http://www.exploit-db.com/exploits/32514/}}. Esta POC consiste num pequeno \textit{script} escrito em Python. Como tal, instalou-se Python na máquina virtual. Tentámos correr o \textit{script}, mas o código Python revelava alguns erros. Após correcção desses erros conseguiu-se gerar 3 ficheiros de \textit{exploit}. Experimentou-se então abrir esses ficheiros no Haihaisoft UP. Os resultados dos 3 ficheiros foram semelhantes: com um deles o programa fechou-se mal era aberto; com os outros dois ficheiros o programa deixava de responder (aparecia o menu do Windows a dar essa informação), e passado algum tempo o programa era fechado. O \textit{shellcode} introduzido é um conjunto de instruções que ainda não houve oportunidade de verificar o que faz. No entanto verificou-se que claramente algo de errado acontece com o programa ao abrir os ficheiros de \textit{exploit}.
+Por fim foi testada a POC encontrada na Exploit Database\footnote{\url{http://www.exploit-db.com/exploits/32514/}}. Esta POC consiste num pequeno \textit{script} escrito em Python. Como tal, instalou-se Python na máquina virtual. Tentámos correr o \textit{script}, mas o código Python revelava alguns erros. Após correcção desses erros conseguiu-se gerar 3 ficheiros de \textit{exploit}. Experimentou-se então abrir esses ficheiros no Haihaisoft UP. Os resultados dos 3 ficheiros foram semelhantes: com um deles o programa fechou-se mal era aberto; com os outros dois ficheiros o programa deixava de responder (aparecia o menu do Windows a dar essa informação), e passado algum tempo o programa era fechado. O \textit{shellcode} introduzido é um conjunto de instruções cuja funcionalidade se desconhece. No entanto foi verificado que claramente algo de errado acontece com o programa ao abrir os ficheiros de \textit{exploit}.
 
 \subsection{Semana 3}
-Prazo: 21/11/14
-\subsubsection{Disponibilidade}
-Muito reduzida devido ao teste de SIRS.
+%Prazo: 21/11/14
+%\subsubsection{Disponibilidade}
+%Muito reduzida devido ao teste de SIRS.
 
-\subsubsection{Tarefas}
-\begin{itemize}
-	\item Identificar o objectivo do código Assembly injectado através de \textit{buffer overflow}.
-\end{itemize}
+%\subsubsection{Tarefas}
+%\begin{itemize}
+%	\item Identificar o objectivo do código Assembly injectado através de \textit{buffer overflow}.
+%\end{itemize}
 
-\subsubsection{Trabalho Realizado}
+%\subsubsection{Trabalho Realizado}
 %Examinou-se o código fonte de maneira a descobrir o endereço de retorno, de maneira a alterar o código de exploit para correr código feito pelo grupo
 
 Nesta semana foi analisada a POC. São escritos bytes com 4 valores diferentes para o ficheiro de \textit{exploit}. Chegou-se à conclusão de que os valores dos bytes se referem aos caracteres ASCII A, B e C e que o outro valor é usado como \textit{padding}.
 
 \subsection{Semana 4}
-Prazo: 28/11/14
-\subsubsection{Disponibilidade}
-Maior disponibilidade.
-\subsubsection{Tarefas}
-\begin{itemize}
-	\item Desenvolvimento do código que se serve da vulnerabilidade encontrada para conseguir acesso com privilégios elevados.
-\end{itemize}
+%Prazo: 28/11/14
+%\subsubsection{Disponibilidade}
+%Maior disponibilidade.
+%\subsubsection{Tarefas}
+%\begin{itemize}
+%	\item Desenvolvimento do código que se serve da vulnerabilidade encontrada para conseguir acesso com privilégios elevados.
+%\end{itemize}
 
-\subsubsection{Trabalho Realizado}
+%\subsubsection{Trabalho Realizado}
 A primeira conclusão a que se chegou foi que não é possível fazer um \textit{stack based overflow}. O Windows usa SEH (\textit{structured exception handlers}) o que faz com que \textit{stack based overflows} não sejam possíveis, ou seja, fazer um overwrite directo do EIP (instruction pointer) e fazer um RET.
 
 Outra conclusão a que se chegou foi que o \textit{buffer} cuja capacidade é excedida não é directamente o \textit{buffer} que recebe a URL, mas sim um \textit{buffer} que contém a URL transformada, após transformação/eliminação de caracteres que não são permitidos em URLs. Isto significa que os valores de bytes que são possíveis escrever ficam muito mais limitados. Mais concretamente de 256 valores de bytes passa-se a poder usar apenas cerca de 90 valores. Por outro lado não é possível usar o valor \texttt{0x00} porque é o terminador de \textit{strings}, e portanto ao usar o programa este pára de copiar bytes assim que encontra um byte com esse valor (parando o overflow antes do que se quer).
 
 O Haihaisoft UP não foi compilado com protecção da SEH. Ou seja em teoria é possível fazer \textit{overflow} das estruturas SEH e enganar o programa de forma a que escreva um novo valor no EIP, valor esse escolhido pelo grupo. Para fazer isto tem que se conseguir que o programa execute uma sequência de instruções POP POP RET, que tem que estar em código não compilado com protecção de SEH. Neste caso, o próprio executável não tem esta protecção pelo que esta sequência de instruções podia ser uma do próprio programa.
 
-Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, a componente de código é aquela que tem as instruções do programa. Ou seja, é lá que se tem que encontrar uma sequência POP POP RET. No entanto, verificou-se que os endereços de memória do segmento de código começam todos pelo byte \texttt{0x00}. Isto significa que para enganar o programa de forma a que este salte para a dita sequência de código, teria-se que fazer um overwrite da SEH handler para um endereço cujo primeiro byte é \texttt{0x00}. Ora isso não é possível porque não é possível escrever esse valor de byte. Portanto, não se consegue que seja executada a sequência de instruções necessária para que se conseguísse alterar o EIP para uma zona de memória controlada pelo grupo de forma a executar uma \textit{exploit}.
+Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, a componente de código é aquela que tem as instruções do programa. Ou seja, é lá que se tem que encontrar uma sequência POP POP RET. No entanto, verificou-se que os endereços de memória do segmento de código começam todos pelo byte \texttt{0x00}. Isto significa que para enganar o programa de forma a que este salte para a dita sequência de código, teria que se fazer um overwrite da SEH handler para um endereço cujo primeiro byte é \texttt{0x00}. Ora isso não é possível porque não é possível escrever esse valor de byte. Portanto, não se consegue que seja executada a sequência de instruções necessária para que se conseguísse alterar o EIP para uma zona de memória controlada pelo grupo de forma a executar uma \textit{exploit}.
 
 Decidiu-se então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro zero-day.
 
 
-\subsubsection{Novo Paradigma -- i.FTP}
-Consultou-se a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontramos um \textit{zero-day} novo. O candidato escolhido foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de \textit{buffer overflow} (foi decidido manter o tipo de vulnerabilidade a ser explorada).
+\subsubsection{Novo Paradigma do Projecto-- i.FTP}
+Consultou-se uma vez mais a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontrar um novo \textit{zero-day}. O candidato escolhido foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de \textit{buffer overflow} (foi decidido manter o tipo de vulnerabilidade a ser explorada, de maneira a não desperdiçar o conhecimento adquirido).
 
 O referido site oferece uma POC para esta vulnerabilidade. Após análise dessa POC conclui-se que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml \footnote{localizado em C:\textbackslash Users\textbackslash someuser\textbackslash AppData\textbackslash Local\textbackslash VirtualStore\textbackslash Program Files (x86)\\ \textbackslash Memecode\textbackslash i.Ftp}. Existe um campo nesse ficheiro que se refere ao tempo para o qual se quer agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
 
-Foi feita uma análise da vulnerabilidade e conseguimos executar uma \textit{exploit} (abrir a calculadora do Windows). Esta \textit{exploit} não é muito interessante e portanto vai-se tentar elaborar outra que o seja.
+Foi feita uma análise da vulnerabilidade e conseguimos executar uma \textit{exploit} (abrir a calculadora do Windows). Esta \textit{exploit} não é muito interessante, pelo que começou também o desenvolvimento de uma \textit{exploit} que o fosse.
 
-Ao correr o programa a calculadora é imediatamente aberta e o programa termina com a janela do Windows que diz que o programa não responde. Gostava-se que fosse possível evitar que o programa terminasse de forma a que não seja perceptível que algo de errado se passou. A calculadora não é afectada pela terminação do i.FTP, ou seja a \textit{exploit} continua a correr mesmo com o fecho do i.FTP.
+Ao correr o programa a calculadora é imediatamente aberta e o programa termina com a janela do Windows que diz que o programa não responde. Idealmente, o programa não terminaria inesperadamente, de maneira a preservar a ilusão de normalidade. A calculadora não é afectada pela terminação do i.FTP, ou seja a \textit{exploit} continua a correr mesmo com o fecho do i.FTP.
 
 
 \subsection{Semana 5}
-Prazo: 05/12/14
-\subsubsection{Disponibilidade}
-Média.
-\subsubsection{Tarefas}
-\begin{itemize}
-	\item Elaborar um ataque mais interessante;
-	\item Evitar que o programa deixe de responder;
-	\item Tentar eliminar a vulnerabilidade;
-	\item Conclusão do presente documento.
-\end{itemize}
+%Prazo: 05/12/14
+%\subsubsection{Disponibilidade}
+%Média.
+%\subsubsection{Tarefas}
+%\begin{itemize}
+%	\item Elaborar um ataque mais interessante;
+%	\item Evitar que o programa deixe de responder;
+%	\item Tentar eliminar a vulnerabilidade;
+%	\item Conclusão do presente documento.
+%\end{itemize}
 
 \section{Análise STRIDE}
 
