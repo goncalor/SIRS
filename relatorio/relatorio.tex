@@ -232,8 +232,21 @@ Verificou-se que no caso do i.FTP outro caracter que parece terminar o overflow 
 O output resultante está pronto a ser usado como \textit{shellcode} para o SEH \textit{based overflow}.
 
 
+\section{Eliminação da Vulnerabilidade}
+
+Dada a reduzida disponibilidade do grupo e do facto de não lhe ser familiar o código \texttt{C++} com objectos, não foi possível identificar as linhas de código associadas à vulnerabilidade considerada.
+
+No entanto, sabe-se que o \textit{buffer overflow} ocorre devido ao campo \texttt{Time} do ficheiro Schedule.xml. Quando um download é calendarizado no i.FTP, é preenchido um formulário em que campo relativo ao tempo do download é definido através de um menu \textit{dropdown}. O tempo fica assim escrito com a sintaxe correcta. Suspeita-se que a vulnerabilidade é causada em parte ou na totalidade por não ser feita uma verificação do conteúdo do campo \texttt{Time} do ficheiro Schedule.xml que é carregado pelo programa. Se o tamanho e caracteres deste campo fossem verificados, as \textit{exploits} usadas não teriam funcionado porque:
+
+\begin{enumerate}
+	\item o conteúdo de \texttt{Time} é claramente demasiado longo para se tratar de uma data válida;
+	\item os caracteres injectados neste campo não são representáveis -- por exemplo \texttt{0x10}.
+\end{enumerate}
+
 \pagebreak
 \section{Resultados}
+
+
 
 \subsection{Esperados}
 \subsection{Obtidos}
