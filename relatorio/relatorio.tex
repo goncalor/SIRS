@@ -205,11 +205,11 @@ No nSEH escrevemos por exemplo \texttt{0xEB069090} ou \texttt{0x9090EB04} (\text
 
 Um exemplo clássico é o de um shellcode que abre uma calculadora do Windows:
 
-	\texttt{ruby msfpayload windows\/exec CMD=calc.exe R}
+	\texttt{ruby msfpayload windows/exec CMD=calc.exe R}
 
 No entanto, o shellcode gerado pode conter alguns caracteres que não nos é possível usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um shellcode alternativo sem esses caracteres, o que pode ser feito com:
 
-	\texttt{ruby msfpayload windows\/exec CMD=calc.exe R | ruby msfencode \\ -b `\textbackslash x00\textbackslash x0A\textbackslash x0D' -t N}
+	\texttt{ruby msfpayload windows/exec CMD=calc.exe R | ruby msfencode \\ -b `\textbackslash x00\textbackslash x0A\textbackslash x0D' -t c}
 
 Verificámos que no caso do i.FTP outro carácter que parece terminar o overflow é o \texttt{0x26}, pelo que esse carácter também foi excluído.
 
