@@ -10,7 +10,7 @@
 \usepackage{amsmath}
 \usepackage[nottoc,numbib]{tocbibind}	% adds Biliography to index
 \usepackage{listings}
-%\usepackage[margin=3.3cm]{geometry}
+\usepackage[margin=2.3cm]{geometry}
 
 \begin{document}
 
@@ -24,7 +24,6 @@
 \section{Motivação}
 Este trabalho tem como motivação fazer um estudo aprofundado de uma \textit{zero-day vulnerability}, e, desta forma, perceber como funcionam este tipo de ataques e como são tratadas as vulnerabilidades a eles associadas. Para além disso, como motivação também surge o facto de esta ser uma oportunidade para aplicar os conhecimentos adquiridos este semestre na disciplina de Segurança Informática em Redes e Sistemas.
 
-\pagebreak
 \section{Objectivos}
 \label{sec:objectivos}
 
@@ -47,8 +46,6 @@ Realização de um ou vários ataques ao software tirando proveito da vulnerabil
 \subsection*{Avançado}
 Tentar eliminar a vulnerabilidade estudada.
 
-
-\pagebreak
 %\section{Plano de Trabalho}
 \section{Trabalho Realizado}
 \subsection{Semana 1}
@@ -121,7 +118,7 @@ Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, 
 Decidiu-se então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro zero-day.
 
 
-\subsubsection{Novo Paradigma do Projecto-- i.FTP 2.20}
+\subsubsection{Novo Paradigma do Projecto -- i.FTP 2.20}
 Consultou-se uma vez mais a Exploit Database\footnote{\url{http://www.exploit-db.com}} de forma a encontrar um novo \textit{zero-day}. O candidato escolhido foi o i.FTP\footnote{\url{http://www.memecode.com/iftp.php}}. Trata-se de um cliente de FTP que apresenta vulnerabilidades de \textit{buffer overflow} (foi decidido manter o tipo de vulnerabilidade a ser explorada, de maneira a não desperdiçar o conhecimento adquirido).
 
 O referido site oferece uma POC\footnote{\url{http://www.exploit-db.com/exploits/35177/}} para esta vulnerabilidade. Após análise dessa POC conclui-se que a vulnerabilidade resulta do carregamento de um ficheiro de configurações do programa -- Schedule.xml\footnote{localizado em C:\textbackslash Users\textbackslash someuser\textbackslash AppData\textbackslash Local\textbackslash VirtualStore\textbackslash Program Files (x86)\\ \textbackslash Memecode\textbackslash i.Ftp}. Existe um campo nesse ficheiro que se refere ao tempo para o qual se quer agendar uma transferência. Esse campo é susceptível a \textit{overflows}.
@@ -146,7 +143,7 @@ Ao correr o programa a calculadora é imediatamente aberta e o programa termina 
 Decidiu-se aplicar uma \textit{exploit} que permitisse ter acesso remoto à máquina atacada. Para isso gerou-se um novo \textit{shellcode} com o seguinte comando:
 
 \begin{lstlisting}
-   ruby msfpayload windows/shell\_bind\_tcp EXITFUNC=seh
+   ruby msfpayload windows/shell_bind_tcp EXITFUNC=seh
      LPORT=1234 R | ruby msfencode -a x86
      -b `\x00\x0a\x0d\x26' -t c
 \end{lstlisting}
@@ -161,117 +158,14 @@ que abre um porto TCP para a shell da máquina atacada no porto 1234. O atacante
 
 O resultado disto pode ser visto na Figura~\ref{fig:remote_shell}. Correndo o comando \texttt{whoami} é possível verificar que a shell está a ser corrida como o user que lançou o i.FTP.
 
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{remote_shell}
+\begin{figure}[h]
+        \centering
+	\includegraphics[width=0.7\linewidth]{remote_shell}
 	\caption{Acesso remoto à máquina atacada}
 	\label{fig:remote_shell}
 \end{figure}
 
-\section{Análise STRIDE}
 
-De maneira a melhor explorar as vulnerabilidades presentes, verifica-se que as ameaças mais preponderantes são:
-
-\begin{itemize}
-        \item Spoofing, pois é possível implantar ficheiros em computadores de outros utilizadores/pessoas;
-        \item Information Disclosure, dada a possibilidade de nos ser concedido acesso remmoto a dados aos quais não temos direito;
-        \item Tampering with Data, pois a integridade do programa pode ser comprometida;
-        \item DoS, pois há situações em que ocorre o crash do programa;
-        \item Elevation of Privilege, dado que o atacante herda os privilégios do utilizador que activa a \textit{exploit}.
-\end{itemize}
-
-\section{SEH Based Overflow -- Passo a Passo}
-
-\label{sec:seh}
-
-Nem sempre é possível fazer uma \textit{stack based exploit}. No entanto, em Windows é possível fazer um ataque com base na SEH (\textit{structured exception handling}). A SEH trata-se de uma lista ligada de registos relativos às excepções de um programa. Mesmo que um programa não tenha \textit{exception handling}, existe um \textit{handler} inerente ao Sistema Operativo Windows que, no caso de não haver outros \textit{handlers}, é actuado.
-
-Cada registo da SEH tem dois ponteiros: um deles aponta para o código a correr no caso da excepção se verificar (SE handler); o outro aponta para a estrutura seguinte da SEH.
-
-A função que é chamada no caso de ocorrer uma excepção tem a particularidade de receber quatro argumentos, sendo que um desses argumentos é a ``\textit{establisher frame}'' cujo valor é o endereço em que se encontra o endereço para a próxima estrutura da SEH. Este endereço é o terceiro elemento no topo da pilha quando a função é chamada. Isto significa que se após a chamada da função for executada uma sequência de instruções POP POP RET, o registo EIP passa a apontar para o endereço imediatamente antes da SE handler. Há portanto a possibilidade de se conseguir executar código visto que com o \textit{overflow} é possível controlar tanto o valor da SE handler como o valor do ponteiro para a próxima estrutura da SEH.
-
-Os passos necessários para fazer uma SEH based exploit estão especificados na Figura~\ref{fig:flowchart1}.
-
-%\begin{enumerate}
-%	\item descobrir aproximadamente a partir de que tamanho de input o programa crasha -- exemplo: o programa não apresenta problemas com um input de 1000 caracteres mas sim com um de 2000 
-%	\item verificar se o programa é vulnerável a ataques via SEH -- se não for não vale a pena continuar
-%	\item determinar o offset da SEH
-%	\item encontrar um endereço com uma sequência de instruções POP POP RET
-%	\item verificar qual a melhor localização da stack para escrever o shellcode
-%	\item escrever as instruções necessária para fazer um ou vários saltos até à localização do shellcode
-%	\item escrever o shellcode, sem caracteres terminadores e outros que não seja possível usar
-%	\item testar a exploit
-%\end{enumerate}
-
-\begin{figure}[h]
-        \centering
-        \includegraphics[width=0.7\linewidth]{fc1}
-        \caption{Fluxograma de uma SEH \textit{exploit}}
-        \label{fig:flowchart1}
-\end{figure}
-De seguida descreve-se brevemente como se pode executar cada passo. O debugger usado é o Immunity Debugger. Outro programa auxiliar é o Metasploit.
-
-\paragraph*{Programa vulnerável a SEH?} Usando o plugin \texttt{mona} é possível determinar facilmente quais os módulos não compilados com SafeSEH. Para tal, após instalação do \texttt{mona} basta executar o seguinte comando:
-
-	\texttt{!mona nosafeseh}
-
-No caso do i.FTP é perceptível que existem dois módulos carregados pelo programa que não têm SafeSEH: \texttt{iftp.exe} e \texttt{Lgi.dll}. Pode-se também ver quais os endereços de memória do seu código.
-
-\paragraph*{Determinar \textit{offset} da SEH} O \textit{offset} da SEH pode ser determinado com o auxílio do comando \texttt{pattern-create} da ferramenta do Metasploit. Esta ferramenta gera uma sequência de bytes sem repetições, em que se torna fácil descobrir o offset de conjuntos de vários bytes.
-
-	\texttt{ruby pattern\_create.rb 2000}
-
-2000 deve ser substituído pelo número de bytes que se quiser para a sequência. Esse valor deve ser suficientemente grande para que o programa termine inesperadamente.
-
-Usando o debugger para examinar o \textit{overflow} podemos verificar qual o valor escrito no ``Pointer to the next SEH record'' (nSEH). O \textit{offset} desse valor desde o início do \textit{buffer} pode depois ser obtido com:
-
-	\texttt{ruby pattern\_offset.rb Au0A}
-
-em que Au0A é o valor escrito no sítio do ponteiro anteriormente referido para no caso do i.FTP. Ficou-se a saber que o offset do início da estrutura é 600.
-
-\paragraph*{Encontrar POP POP RET} Tem que se encontrar uma sequência POP POP RET num dos módulos que não tenha SafeSEH. Existem várias formas de o fazer. A mais simples é pesquisar uma sequência de comandos no disassembler fazendo \textit{Search for > Sequence of commands (CTRL + S)} e escrever nessa janela o que se pode ser na Figura~\ref{find_POPPOPRET}.
-
-\begin{figure}
-	\centering
-	\includegraphics[scale=1]{find_POPPOPRET}
-	\caption{Procurar uma sequência POP POP RET}
-	\label{find_POPPOPRET}
-\end{figure}
-
-Uma vez encontrada essa sequência há que anotar o seu endereço para o usar mais tarde. Neste caso anotou-se \texttt{0x1001A24A}, pertencente ao \texttt{Lgi.dll}.
-
-\paragraph*{Melhor localização para o \textit{shellcode}} A melhor localização para o código do shellcode varia com a sua dimensão e qual o número de bytes na \textit{stack} que se tem sob controlo. No caso do i.FTP o \textit{offset} do último byte sobre o qual se tem controlo é cerca de 1360 pelo que devemos ter espaço que chegue para o \textit{shellcode} a seguir ao registo da SEH. Deferimos então que o \textit{shellcode} será colocado a seguir ao registo da SEH que está sob nosso controlo.
-
-\paragraph*{Escrever instrução de salto} Para este passo existem várias opções. É possível fazer compilar uma instrução de salto e usá-la. Mas como neste caso se trata apenas de uma instrução optou-se por usar uma referência de x86 para identificar o \textit{opcode} a usar. Só é necessário saltar para o endereço a seguir ao do registo da SEH. Para isso basta um salto de no máximo 8 bytes visto que esse é o tamanho total do registo da SEH. Foram consultados \cite{AMD64vol3_2013} e \cite{refx86asm} e chegou-se à conclusão de que para fazer um near JUMP o \textit{opcode} é \texttt{0xEB} e que o byte seguinte é o valor do salto.
-
-No nSEH escreveu-se por exemplo \texttt{0xEB069090} ou \texttt{0x9090EB04} (\texttt{0x90} são NOPs), ou seja pode-se saltar ou 6 ou 4 bytes dependendo do alinhamento que se der à instrução near JUMP. A seguir à SEH começamos a escrever o \textit{shellcode} e é para lá que se vai saltar.
-
-\paragraph*{Escrever o \textit{shellcode}} Para escrever a \textit{exploit} pode-se usar uma ferramenta do Metasploit, o \texttt{msfpayload}. Este programa gera vários \textit{shellcodes} para diferentes sistemas operativos.
-
-Um exemplo clássico é o de um \textit{shellcode} que abre uma calculadora do Windows:
-
-	\texttt{ruby msfpayload windows/exec CMD=calc.exe R}
-
-No entanto, o \textit{shellcode} gerado pode conter alguns caracteres que não são possíveis usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um \textit{shellcode} alternativo sem esses caracteres, o que pode ser feito com:
-
-	\texttt{ruby msfpayload windows/exec CMD=calc.exe R | ruby msfencode \\ -b `\textbackslash x00\textbackslash x0A\textbackslash x0D' -t c}
-
-Verificou-se que no caso do i.FTP outro caracter que parece terminar o overflow é o \texttt{0x26}, pelo que esse caracter também foi excluído.
-
-O output resultante está pronto a ser usado como \textit{shellcode} para o SEH \textit{based overflow}.
-
-
-\section{Eliminação da Vulnerabilidade}
-
-Dada a reduzida disponibilidade do grupo e do facto de não lhe ser familiar o código \texttt{C++} com objectos, não foi possível identificar as linhas de código associadas à vulnerabilidade considerada.
-
-No entanto, sabe-se que o \textit{buffer overflow} ocorre devido ao campo \texttt{Time} do ficheiro Schedule.xml. Quando um download é calendarizado no i.FTP, é preenchido um formulário em que campo relativo ao tempo do download é definido através de um menu \textit{dropdown}. O tempo fica assim escrito com a sintaxe correcta. Suspeita-se que a vulnerabilidade é causada em parte ou na totalidade por não ser feita uma verificação do conteúdo do campo \texttt{Time} do ficheiro Schedule.xml que é carregado pelo programa. Se o tamanho e caracteres deste campo fossem verificados, as \textit{exploits} usadas não teriam funcionado porque:
-
-\begin{enumerate}
-	\item o conteúdo de \texttt{Time} é claramente demasiado longo para se tratar de uma data válida;
-	\item os caracteres injectados neste campo não são representáveis -- por exemplo \texttt{0x10}.
-\end{enumerate}
-
-\pagebreak
 \section{Resultados}
 
 
@@ -306,7 +200,7 @@ A impossibilidade de inserir um endereço definido acabou por levar ao abandono 
 
 Ao analisar a POC, a determinação de endereços de salto e outros valores significativos mostrou-se impossível, pelo que se recorreu a ferramentas como o Immunity Debugger e o Metasploit. A determinação de endereços sem recurso a ferramentas auxiliares é uma técnica morosa e deprecada.
 
-Uma vez feita esta análise (ver Secção~\ref{sec:seh}), viu-se uma vez mais que a modificação directa do EIP é impossível, e é necessário a alteração das rotinas de processamento de excepções.
+Uma vez feita esta análise (ver Anexo~\ref{sec:seh}), viu-se uma vez mais que a modificação directa do EIP é impossível, e é necessário a alteração das rotinas de processamento de excepções.
 
 Acedendo à base de dados do Metasploit, construímos uma série de \textit{exploits} para o i.FTP com variadas funções:
 \begin{itemize}
@@ -318,6 +212,132 @@ Acedendo à base de dados do Metasploit, construímos uma série de \textit{expl
 Assim, procedeu-se à examinação do código-fonte, utilizando ferramentas como o \texttt{grep} para procura de expressões regulares no conteúdo, e da secção do programa relativa ao tratamento de agendamentos e datas (onde se dá o \textit{overflow}) -- Schedule.cpp.
 
 Uma vez feita esta busca, os resultados foram inconclusivos uma vez que a localização exacta da porção de código vulnerável foi impossível de determinar.
+
+
+\pagebreak
+
+\appendix
+
+\pagenumbering{roman}
+
+\section{Análise STRIDE}
+\label{sec:stride}
+
+De maneira a melhor explorar as vulnerabilidades presentes, verifica-se que as ameaças mais preponderantes são:
+
+\begin{itemize}
+        \item Spoofing, pois é possível implantar ficheiros em computadores de outros utilizadores/pessoas;
+        \item Information Disclosure, dada a possibilidade de nos ser concedido acesso remmoto a dados aos quais não temos direito;
+        \item Tampering with Data, pois a integridade do programa pode ser comprometida;
+        \item DoS, pois há situações em que ocorre o crash do programa;
+        \item Elevation of Privilege, dado que o atacante herda os privilégios do utilizador que activa a \textit{exploit}.
+\end{itemize}
+
+\section{SEH Based Overflow -- Passo a Passo}
+\label{sec:seh}
+
+Nem sempre é possível fazer uma \textit{stack based exploit}. No entanto, em Windows é possível fazer um ataque com base na SEH (\textit{structured exception handling}). A SEH trata-se de uma lista ligada de registos relativos às excepções de um programa. Mesmo que um programa não tenha \textit{exception handling}, existe um \textit{handler} inerente ao Sistema Operativo Windows que, no caso de não haver outros \textit{handlers}, é actuado.
+
+Cada registo da SEH tem dois ponteiros: um deles aponta para o código a correr no caso da excepção se verificar (SE handler); o outro aponta para a estrutura seguinte da SEH.
+
+A função que é chamada no caso de ocorrer uma excepção tem a particularidade de receber quatro argumentos, sendo que um desses argumentos é a ``\textit{establisher frame}'' cujo valor é o endereço em que se encontra o endereço para a próxima estrutura da SEH. Este endereço é o terceiro elemento no topo da pilha quando a função é chamada. Isto significa que se após a chamada da função for executada uma sequência de instruções POP POP RET, o registo EIP passa a apontar para o endereço imediatamente antes da SE handler. Há portanto a possibilidade de se conseguir executar código visto que com o \textit{overflow} é possível controlar tanto o valor da SE handler como o valor do ponteiro para a próxima estrutura da SEH.
+
+Os passos necessários para fazer uma SEH based exploit estão especificados na Figura~\ref{fig:flowchart1}.
+
+%\begin{enumerate}
+%	\item descobrir aproximadamente a partir de que tamanho de input o programa crasha -- exemplo: o programa não apresenta problemas com um input de 1000 caracteres mas sim com um de 2000 
+%	\item verificar se o programa é vulnerável a ataques via SEH -- se não for não vale a pena continuar
+%	\item determinar o offset da SEH
+%	\item encontrar um endereço com uma sequência de instruções POP POP RET
+%	\item verificar qual a melhor localização da stack para escrever o shellcode
+%	\item escrever as instruções necessária para fazer um ou vários saltos até à localização do shellcode
+%	\item escrever o shellcode, sem caracteres terminadores e outros que não seja possível usar
+%	\item testar a exploit
+%\end{enumerate}
+
+\begin{figure}[h]
+        \centering
+        \includegraphics[width=0.7\linewidth]{fc1}
+        \caption{Fluxograma de uma SEH \textit{exploit}}
+        \label{fig:flowchart1}
+\end{figure}
+De seguida descreve-se brevemente como se pode executar cada passo. O debugger usado é o Immunity Debugger. Outro programa auxiliar é o Metasploit.
+
+\paragraph*{Programa vulnerável a SEH?} Usando o plugin \texttt{mona} é possível determinar facilmente quais os módulos não compilados com SafeSEH. Para tal, após instalação do \texttt{mona} basta executar o seguinte comando:
+\begin{lstlisting}
+   !mona nosafeseh
+\end{lstlisting}
+No caso do i.FTP é perceptível que existem dois módulos carregados pelo programa que não têm SafeSEH: \texttt{iftp.exe} e \texttt{Lgi.dll}. Pode-se também ver quais os endereços de memória do seu código.
+
+\paragraph*{Determinar \textit{offset} da SEH} O \textit{offset} da SEH pode ser determinado com o auxílio do comando \texttt{pattern-create} da ferramenta do Metasploit. Esta ferramenta gera uma sequência de bytes sem repetições, em que se torna fácil descobrir o offset de conjuntos de vários bytes.
+
+\begin{lstlisting}
+   ruby pattern_create.rb 2000
+\end{lstlisting}
+
+
+2000 deve ser substituído pelo número de bytes que se quiser para a sequência. Esse valor deve ser suficientemente grande para que o programa termine inesperadamente.
+
+Usando o debugger para examinar o \textit{overflow} podemos verificar qual o valor escrito no ``Pointer to the next SEH record'' (nSEH). O \textit{offset} desse valor desde o início do \textit{buffer} pode depois ser obtido com:
+
+\begin{lstlisting}
+   ruby pattern_offset.rb Au0A
+\end{lstlisting}
+
+
+em que Au0A é o valor escrito no sítio do ponteiro anteriormente referido para no caso do i.FTP. Ficou-se a saber que o offset do início da estrutura é 600.
+
+\paragraph*{Encontrar POP POP RET} Tem que se encontrar uma sequência POP POP RET num dos módulos que não tenha SafeSEH. Existem várias formas de o fazer. A mais simples é pesquisar uma sequência de comandos no disassembler fazendo \textit{Search for > Sequence of commands (CTRL + S)} e escrever nessa janela o que se pode ser na Figura~\ref{find_POPPOPRET}.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=1]{find_POPPOPRET}
+	\caption{Procurar uma sequência POP POP RET}
+	\label{find_POPPOPRET}
+\end{figure}
+
+Uma vez encontrada essa sequência há que anotar o seu endereço para o usar mais tarde. Neste caso anotou-se \texttt{0x1001A24A}, pertencente ao \texttt{Lgi.dll}.
+
+\paragraph*{Melhor localização para o \textit{shellcode}} A melhor localização para o código do shellcode varia com a sua dimensão e qual o número de bytes na \textit{stack} que se tem sob controlo. No caso do i.FTP o \textit{offset} do último byte sobre o qual se tem controlo é cerca de 1360 pelo que devemos ter espaço que chegue para o \textit{shellcode} a seguir ao registo da SEH. Deferimos então que o \textit{shellcode} será colocado a seguir ao registo da SEH que está sob nosso controlo.
+
+\paragraph*{Escrever instrução de salto} Para este passo existem várias opções. É possível fazer compilar uma instrução de salto e usá-la. Mas como neste caso se trata apenas de uma instrução optou-se por usar uma referência de x86 para identificar o \textit{opcode} a usar. Só é necessário saltar para o endereço a seguir ao do registo da SEH. Para isso basta um salto de no máximo 8 bytes visto que esse é o tamanho total do registo da SEH. Foram consultados \cite{AMD64vol3_2013} e \cite{refx86asm} e chegou-se à conclusão de que para fazer um near JUMP o \textit{opcode} é \texttt{0xEB} e que o byte seguinte é o valor do salto.
+
+No nSEH escreveu-se por exemplo \texttt{0xEB069090} ou \texttt{0x9090EB04} (\texttt{0x90} são NOPs), ou seja pode-se saltar ou 6 ou 4 bytes dependendo do alinhamento que se der à instrução near JUMP. A seguir à SEH começamos a escrever o \textit{shellcode} e é para lá que se vai saltar.
+
+\paragraph*{Escrever o \textit{shellcode}} Para escrever a \textit{exploit} pode-se usar uma ferramenta do Metasploit, o \texttt{msfpayload}. Este programa gera vários \textit{shellcodes} para diferentes sistemas operativos.
+
+Um exemplo clássico é o de um \textit{shellcode} que abre uma calculadora do Windows:
+
+\begin{lstlisting}
+   ruby msfpayload windows/exec CMD=calc.exe R
+\end{lstlisting}
+
+
+No entanto, o \textit{shellcode} gerado pode conter alguns caracteres que não são possíveis usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um \textit{shellcode} alternativo sem esses caracteres, o que pode ser feito com:
+
+\begin{lstlisting}
+   ruby msfpayload windows/exec CMD=calc.exe R | ruby msfencode
+     -b `\x00\x0A\x0D' -t c
+\end{lstlisting}
+
+
+Verificou-se que no caso do i.FTP outro caracter que parece terminar o overflow é o \texttt{0x26}, pelo que esse caracter também foi excluído.
+
+O output resultante está pronto a ser usado como \textit{shellcode} para o SEH \textit{based overflow}.
+
+
+\section{Eliminação da Vulnerabilidade}
+\label{sec:vulnerability}
+
+Dada a reduzida disponibilidade do grupo e do facto de não lhe ser familiar o código \texttt{C++} com objectos, não foi possível identificar as linhas de código associadas à vulnerabilidade considerada.
+
+No entanto, sabe-se que o \textit{buffer overflow} ocorre devido ao campo \texttt{Time} do ficheiro Schedule.xml. Quando um download é calendarizado no i.FTP, é preenchido um formulário em que campo relativo ao tempo do download é definido através de um menu \textit{dropdown}. O tempo fica assim escrito com a sintaxe correcta. Suspeita-se que a vulnerabilidade é causada em parte ou na totalidade por não ser feita uma verificação do conteúdo do campo \texttt{Time} do ficheiro Schedule.xml que é carregado pelo programa. Se o tamanho e caracteres deste campo fossem verificados, as \textit{exploits} usadas não teriam funcionado porque:
+
+\begin{enumerate}
+	\item o conteúdo de \texttt{Time} é claramente demasiado longo para se tratar de uma data válida;
+	\item os caracteres injectados neste campo não são representáveis -- por exemplo \texttt{0x10}.
+\end{enumerate}
+
 
 \pagebreak
 \bibliographystyle{plain}
