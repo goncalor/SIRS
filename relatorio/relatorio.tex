@@ -144,18 +144,19 @@ Média.
 
 \section{Análise STRIDE}
 
-Tendo em conta este ataque, fazendo um análise STRIDE ao sistema verifica-se que as ameaças mais preponderantes são:
+De maneira a melhor explorar as vulnerabilidades presentes, verifica-se que as ameaças mais preponderantes são:
 
-- Spoofing, pois dá para implantar ficheiros em computadores de outros utilizadores/pessoas;
-- Information Disclosure, dada a possibilidade de nos ser concedido acesso a dados aos quais não temos direito;
-- Tampering with Data, pois a integridade do programa pde ser comprometida;
-- DoS, pois há situações em que ocorre o crash do programa;
-- Elevation of Privilege, dado que o utilizador que corre o programa não é o nosso, havendo sempre a possibilidade de correr o programa como administrador.
-
+\begin{itemize}
+        \item Spoofing, pois é possível implantar ficheiros em computadores de outros utilizadores/pessoas;
+        \item Information Disclosure, dada a possibilidade de nos ser concedido acesso remmoto a dados aos quais não temos direito;
+        \item Tampering with Data, pois a integridade do programa pode ser comprometida;
+        \item DoS, pois há situações em que ocorre o crash do programa;
+        \item Elevation of Privilege, dado que o atacante herda os privilégios do utilizador que activa a \textit{exploit}.
+\end{itemize}
 
 \section{SEH Based Overflow -- Passo a Passo}
 
-Nem sempre é possível fazer uma \textit{stack based exploit}. No entanto no Windows às vezes é possível fazer um ataque com base na SEH (\textit{structured exception handling}). A SEH é basicamente uma lista ligada de registos relativos às excepções de um programa. Mesmo que um programa não tenha \textit{exception handling} existe sempre uma handle na SEH que pertence ao Windows e é usada se a excepção não for apanhada por outra handle da SEH.
+Nem sempre é possível fazer uma \textit{stack based exploit}. No entanto, em Windows é possível fazer um ataque com base na SEH (\textit{structured exception handling}). A SEH trata-se de uma lista ligada de registos relativos às excepções de um programa. Mesmo que um programa não tenha \textit{exception handling}, existe um \textit{handler} inerente ao Sistema Operativo Windows que, no caso de não haver outros \textit{handlers}, é actuado.
 
 Cada registo da SEH tem dois ponteiros: um deles aponta para o código a correr no caso da excepção se verificar (SE handler); o outro aponta para a estrutura seguinte da SEH.
 
@@ -223,7 +224,7 @@ Um exemplo clássico é o de um \textit{shellcode} que abre uma calculadora do W
 
 	\texttt{ruby msfpayload windows/exec CMD=calc.exe R}
 
-No entanto, o \textit{shellcode} gerado pode conter alguns caracteres que não são é possíveis usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um \textit{shellcode} alternativo sem esses caracteres, o que pode ser feito com:
+No entanto, o \textit{shellcode} gerado pode conter alguns caracteres que não são possíveis usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um \textit{shellcode} alternativo sem esses caracteres, o que pode ser feito com:
 
 	\texttt{ruby msfpayload windows/exec CMD=calc.exe R | ruby msfencode \\ -b `\textbackslash x00\textbackslash x0A\textbackslash x0D' -t c}
 
