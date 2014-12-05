@@ -37,12 +37,12 @@ Realização de um ataque ao software por intermédio da vulnerabilidade especif
 Investigação e aplicação de métodos que permitam resolver total ou parcialmente a vulnerabilidade do Haihaisoft UP.
 
 \subsection{Após 25 de Novembro}
-Após uma análise cuidada e tentativas de ataque ao Haihaisoft UP chegou-se à conclusão de que era inviável fazer uma \textit{exploit} que fosse consistente entre versões do Windows. Vimo-nos portanto obrigados a escolher outro software com uma vulnerabilidade \textit{zero-day}. De forma a aproveitar o conhecimento adquirido escolheu-se um software também vulnerável a \textit{buffer overflows}: o i.FTP. Seguem-se os novos objectivos.
+Após uma análise cuidada e tentativas de ataque ao Haihaisoft UP chegou-se à conclusão de que era inviável fazer uma \textit{exploit} que fosse consistente entre versões do Windows. Vimo-nos portanto obrigados a escolher outro software com uma vulnerabilidade \textit{zero-day}. De forma a aproveitar o conhecimento adquirido escolheu-se um \textit{software} também vulnerável a \textit{buffer overflows}: o i.FTP. Seguem-se os novos objectivos.
 
 \subsection*{Básico}
-Especificar uma vulnerabilidade no software i.FTP.
+Especificar uma vulnerabilidade no \textit{software} i.FTP.
 \subsection*{Intermédio}
-Realização de um ou vários ataques ao software tirando proveito da vulnerabilidade especificada.
+Realização de um ou vários ataques ao \textit{software} tirando proveito da vulnerabilidade especificada.
 \subsection*{Avançado}
 Tentar eliminar a vulnerabilidade estudada.
 
@@ -60,7 +60,7 @@ Tentar eliminar a vulnerabilidade estudada.
 %\end{itemize}
 
 %\subsubsection{Trabalho Realizado}
-Nesta semana procuraram-se listas de software/websites com vulnerabilidades activas e foi escolhido o Haihaisoft Universal Player\footnote{\url{http://www.haihaisoft.com/hup.aspx}}, um leitor universal de ficheiros multimédia, como objecto de estudo deste projecto. Este software é desenvolvido para Windows e é software aberto.
+Nesta semana procuraram-se listas de software/websites com vulnerabilidades activas e foi escolhido o Haihaisoft Universal Player\footnote{\url{http://www.haihaisoft.com/hup.aspx}}, um leitor universal de ficheiros multimédia, como objecto de estudo deste projecto. Este \textit{software} é desenvolvido para Windows e é \textit{software} aberto.
 
 Foram também delineados os objectivos deste projecto (Secção~\ref{sec:objectivos}).
 
@@ -115,7 +115,7 @@ O Haihaisoft UP não foi compilado com protecção da SEH. Ou seja em teoria é 
 
 Os programas em Windows têm a memória dividida em 3 componentes. Entre estas, a componente de código é aquela que tem as instruções do programa. Ou seja, é lá que se tem que encontrar uma sequência POP POP RET. No entanto, verificou-se que os endereços de memória do segmento de código começam todos pelo byte \texttt{0x00}. Isto significa que para enganar o programa de forma a que este salte para a dita sequência de código, teria que se fazer um overwrite da SEH handler para um endereço cujo primeiro byte é \texttt{0x00}. Ora isso não é possível porque não é possível escrever esse valor de byte. Portanto, não se consegue que seja executada a sequência de instruções necessária para que se conseguísse alterar o EIP para uma zona de memória controlada pelo grupo de forma a executar uma \textit{exploit}.
 
-Decidiu-se então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro zero-day.
+Decidiu-se então alterar o alvo de estudo do nosso projecto do Haihaisoft UMP para outro \textit{zero-day}.
 
 
 \subsubsection{Novo Paradigma do Projecto -- i.FTP 2.20}
@@ -156,7 +156,7 @@ que abre um porto TCP para a shell da máquina atacada no porto 1234. O atacante
    nc a.b.c.d 1234
 \end{lstlisting}
 
-O resultado disto pode ser visto na Figura~\ref{fig:remote_shell}. Correndo o comando \texttt{whoami} é possível verificar que a shell está a ser corrida como o user que lançou o i.FTP.
+O resultado disto pode ser visto na Figura~\ref{fig:remote_shell}. Correndo o comando \texttt{whoami} é possível verificar que a \textit{shell} está a ser corrida como o user que lançou o i.FTP.
 
 \begin{figure}[h]
         \centering
@@ -172,7 +172,7 @@ O resultado disto pode ser visto na Figura~\ref{fig:remote_shell}. Correndo o co
 
 \subsection{Esperados}
 
-Originalmente, os resultados esperados correspondiam à identificação, \textit{exploit} e correcção de uma vulnerabilidade no HaiHaisoft UP. Uma vez determinado que estes resultados eram difíceis de conseguir, foi alterado o paradigma do projecto.
+Originalmente, os resultados esperados correspondiam à identificação, \textit{exploit} e correcção de uma vulnerabilidade no Haihaisoft UP. Uma vez determinado que estes resultados eram difíceis de conseguir, foi alterado o paradigma do projecto.
 
 Neste novo âmbito, os resultados esperados passaram a ser outros.
 
@@ -180,11 +180,11 @@ Quanto à identificação da vulnerabilidade, era esperado conseguir os endereç
 
 Subsequentemente, após esta identificação, estava prevista a escrita da \textit{exploit}, de maneira a conseguir executar código injectado através da manipulação do endereço de retorno.
 
-Finalmente, através de um varrimento do código-fonte da aplicação, seria aplicada uma correcção no código relativo ao buffer alvo de ataque.
+Finalmente, através de um varrimento do código-fonte da aplicação, seria aplicada uma correcção no código relativo ao \textit{buffer} alvo de ataque.
 
 \subsection{Obtidos}
 
-\subsubsection{HaiHaisoft UP}
+\subsubsection{Haihaisoft UP}
 
 Uma vez analisada a POC disponível, foi determinado que era possível terminar o programa fora dos seus parâmetros de execução normais, fazendo \textit{overflow} de um \textit{buffer}. O \textit{buffer} em questão corresponde ao URL de um elemento de uma \textit{playlist}.
 
@@ -226,11 +226,11 @@ Uma vez feita esta busca, os resultados foram inconclusivos uma vez que a locali
 De maneira a melhor explorar as vulnerabilidades presentes, verifica-se que as ameaças mais preponderantes são:
 
 \begin{itemize}
-        \item Spoofing, pois é possível implantar ficheiros em computadores de outros utilizadores/pessoas;
-        \item Information Disclosure, dada a possibilidade de nos ser concedido acesso remmoto a dados aos quais não temos direito;
-        \item Tampering with Data, pois a integridade do programa pode ser comprometida;
-        \item DoS, pois há situações em que ocorre o crash do programa;
-        \item Elevation of Privilege, dado que o atacante herda os privilégios do utilizador que activa a \textit{exploit}.
+        \item \textit{Spoofing}, pois é possível implantar ficheiros em computadores de outros utilizadores/pessoas;
+        \item \textit{Information Disclosure}, dada a possibilidade de nos ser concedido acesso remmoto a dados aos quais não temos direito;
+        \item \textit{Tampering with Data}, pois a integridade do programa pode ser comprometida;
+        \item \textit{Denial of Service}, pois há situações em que ocorre o crash do programa;
+        \item \textit{Elevation of Privilege}, dado que o atacante herda os privilégios do utilizador que activa a \textit{exploit}.
 \end{itemize}
 
 \section{SEH Based Overflow -- Passo a Passo}
@@ -240,9 +240,9 @@ Nem sempre é possível fazer uma \textit{stack based exploit}. No entanto, em W
 
 Cada registo da SEH tem dois ponteiros: um deles aponta para o código a correr no caso da excepção se verificar (SE handler); o outro aponta para a estrutura seguinte da SEH.
 
-A função que é chamada no caso de ocorrer uma excepção tem a particularidade de receber quatro argumentos, sendo que um desses argumentos é a ``\textit{establisher frame}'' cujo valor é o endereço em que se encontra o endereço para a próxima estrutura da SEH. Este endereço é o terceiro elemento no topo da pilha quando a função é chamada. Isto significa que se após a chamada da função for executada uma sequência de instruções POP POP RET, o registo EIP passa a apontar para o endereço imediatamente antes da SE handler. Há portanto a possibilidade de se conseguir executar código visto que com o \textit{overflow} é possível controlar tanto o valor da SE handler como o valor do ponteiro para a próxima estrutura da SEH.
+A função que é chamada no caso de ocorrer uma excepção tem a particularidade de receber quatro argumentos, sendo que um desses argumentos é a ``\textit{establisher frame}'' cujo valor é o endereço em que se encontra o endereço para a próxima estrutura da SEH. Este endereço é o terceiro elemento no topo da pilha quando a função é chamada. Isto significa que se após a chamada da função for executada uma sequência de instruções POP POP RET, o registo EIP passa a apontar para o endereço imediatamente antes da SE \textit{handler}. Há portanto a possibilidade de se conseguir executar código visto que com o \textit{overflow} é possível controlar tanto o valor da SE \textit{handler} como o valor do ponteiro para a próxima estrutura da SEH.
 
-Os passos necessários para fazer uma SEH based exploit estão especificados na Figura~\ref{fig:flowchart1}.
+Os passos necessários para fazer uma SEH \textit{based exploit} estão especificados na Figura~\ref{fig:flowchart1}.
 
 %\begin{enumerate}
 %	\item descobrir aproximadamente a partir de que tamanho de input o programa crasha -- exemplo: o programa não apresenta problemas com um input de 1000 caracteres mas sim com um de 2000 
@@ -287,7 +287,7 @@ Usando o debugger para examinar o \textit{overflow} podemos verificar qual o val
 
 em que Au0A é o valor escrito no sítio do ponteiro anteriormente referido para no caso do i.FTP. Ficou-se a saber que o offset do início da estrutura é 600.
 
-\paragraph*{Encontrar POP POP RET} Tem que se encontrar uma sequência POP POP RET num dos módulos que não tenha SafeSEH. Existem várias formas de o fazer. A mais simples é pesquisar uma sequência de comandos no disassembler fazendo \textit{Search for > Sequence of commands (CTRL + S)} e escrever nessa janela o que se pode ser na Figura~\ref{find_POPPOPRET}.
+\paragraph*{Encontrar POP POP RET} Tem que se encontrar uma sequência POP POP RET num dos módulos que não tenha SafeSEH. Existem várias formas de o fazer. A mais simples é pesquisar uma sequência de comandos no disassembler fazendo \textit{Search for > Sequence of commands (CTRL~+~S)} e escrever nessa janela o que se pode ser na Figura~\ref{find_POPPOPRET}.
 
 \begin{figure}
 	\centering
@@ -313,7 +313,7 @@ Um exemplo clássico é o de um \textit{shellcode} que abre uma calculadora do W
 \end{lstlisting}
 
 
-No entanto, o \textit{shellcode} gerado pode conter alguns caracteres que não são possíveis usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um \textit{shellcode} alternativo sem esses caracteres, o que pode ser feito com:
+No entanto, o \textit{shellcode} gerado pode conter alguns caracteres que não é possível usar (caracteres terminadores de strings) e outros dependendo do caso. Os caracteres terminadores de strings são \texttt{0x00}, \texttt{0x0A} e \texttt{0x0D}. Tem que ser encontrado um \textit{shellcode} alternativo sem esses caracteres, o que pode ser feito com:
 
 \begin{lstlisting}
    ruby msfpayload windows/exec CMD=calc.exe R | ruby msfencode
